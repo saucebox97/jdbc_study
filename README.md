@@ -15,3 +15,12 @@ main 밑에 webapp > WEB-INF > lib 경로 만들기
 //오라클 라이브러리 (11g edition - gradle, maven 라이센스 문제 공식 지원 불가)
 implementation fileTree(dir: '/src/main/webapp/WEB-INF/lib', include: ['*.jar'])
 ```
+
+3. lombok 적용하기
+1. build.gradle - dependencies에 추가
+```groovy
+    //lombok 라이브러리
+   compileOnly 'org.projectlombok:lombok:1.18.12'
+   annotationProcessor 'org.projectlombok:lombok:1.18.12'
+```
+2설정에 annotation processor 검색 -> 아노테이션 활성화 체크
