@@ -15,7 +15,7 @@ public class BmiOracleRepo implements BmiRepository{
     public boolean save(Bmi bmi) {
 
         String sql = "INSERT INTO bmi " +
-                "VALUES (seq_bmi.nextval, ?,?,?,?)";
+                "VALUES (seq_bmi.nextval, ?,?,?,?,?,?,?,?)";
 
         try (Connection conn = Connect.makeConnection()) { // 연결
             // 트랜잭션 처리
@@ -26,6 +26,11 @@ public class BmiOracleRepo implements BmiRepository{
             pstmt.setDouble(2,bmi.getHeight());
             pstmt.setDouble(3,bmi.getWeight());
             pstmt.setDouble(4,bmi.getBmi());
+            pstmt.setDouble(5,bmi.getMin());
+            pstmt.setDouble(6,bmi.getMax());
+            pstmt.setString(7,bmi.getResult());
+            pstmt.setDouble(8,bmi.getTarget());
+
 
             int result = pstmt.executeUpdate(); // 실행
 
@@ -76,7 +81,7 @@ public class BmiOracleRepo implements BmiRepository{
     @Override
     public boolean modify(Bmi bmi) {
         String sql = "UPDATE bmi " +
-                " SET height =?, weight =?, bmi = ? " +
+                " SET height = ?, weight = ?, bmi = ?, min = ?, max = ?, result = ?, target = ? " +
                 " WHERE per_num = ?";
 
         try (Connection conn = Connect.makeConnection()) { // 연결
@@ -87,7 +92,11 @@ public class BmiOracleRepo implements BmiRepository{
             pstmt.setDouble(1, bmi.getHeight());
             pstmt.setDouble(2, bmi.getWeight());
             pstmt.setDouble(3, bmi.getBmi());
-            pstmt.setInt(4, bmi.getPerNum());
+            pstmt.setString(4, bmi.getResult());
+            pstmt.setDouble(5, bmi.getMin());
+            pstmt.setDouble(6, bmi.getMax());
+            pstmt.setDouble(7, bmi.getTarget());
+            pstmt.setInt(8, bmi.getPerNum());
 
             int result = pstmt.executeUpdate();
 
@@ -111,7 +120,7 @@ public class BmiOracleRepo implements BmiRepository{
 
         Map<Integer, Bmi> bimMap = new HashMap<>();
 
-        String sql = "SELECT * FROM bim ORDER BY per_num";
+        String sql = "SELECT * FROM bmi ORDER BY per_num";
 
         try (Connection conn = Connect.makeConnection()) {
 
@@ -120,11 +129,15 @@ public class BmiOracleRepo implements BmiRepository{
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
                 Bmi b = new Bmi(
-                        rs.getInt("bmi")
-                        , rs.getString("stu_name")
+                        rs.getInt("per_num")
+                        , rs.getString("per_name")
                         , rs.getDouble("height")
                         , rs.getDouble("weight")
                         , rs.getDouble("bmi")
+                        , rs.getDouble("min")
+                        , rs.getDouble("max")
+                        , rs.getString("result")
+                        , rs.getDouble("target")
                 );
                 bimMap.put(b.getPerNum(), b);
             }
@@ -138,7 +151,7 @@ public class BmiOracleRepo implements BmiRepository{
     @Override
     public Bmi findOne(int perNum) {
 
-        String sql = "SELECT * FROM bim WHERE per_num = ?";
+        String sql = "SELECT * FROM bmi WHERE per_num = ?";
 
         try (Connection conn = Connect.makeConnection()) {
 
@@ -149,11 +162,15 @@ public class BmiOracleRepo implements BmiRepository{
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
                 Bmi b = new Bmi(
-                        rs.getInt("bmi")
-                        , rs.getString("stu_name")
+                        rs.getInt("per_num")
+                        , rs.getString("per_name")
                         , rs.getDouble("height")
                         , rs.getDouble("weight")
                         , rs.getDouble("bmi")
+                        , rs.getDouble("min")
+                        , rs.getDouble("max")
+                        , rs.getString("result")
+                        , rs.getDouble("target")
                 );
                 return b;
             }

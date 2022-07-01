@@ -33,7 +33,7 @@ public class BmiController {
     }
 
     // 신체 전체 조회
-    public List<Bmi> findAllStudents() {
+    public List<Bmi> findAllpersons() {
         Map<Integer, Bmi> persons = repository.findAll();
         bmiMap = persons;
         
